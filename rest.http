@@ -1,0 +1,26 @@
+GET http://localhost:5000
+
+###
+
+POST  http://localhost:5000/api/register
+Content-Type: application/json
+
+{
+    "fullname": "QuyPham",
+    "email": "quypham.devplus@gmail.com",
+    "password": "123123"
+}
+
+###
+POST http://localhost:5000/api/login
+Content-Type: application/json
+
+{
+    "email": "cuongle.devplus@gmail.com",
+    "password": "123123"
+}
+
+### 
+GET http://localhost:5000/get-list
+Content-Type: application/json
+Authorization:  123hbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjU4ZmFhMDQ4YmM3MDBmYWJkNDI1YmQiLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjUwMDA5OTc2LCJleHAiOjE2NTAwMDk5OTF9.UDVuY9toN4uFcABwMy6TcMqKqvSbFUCn4pHmsBEbOS0
