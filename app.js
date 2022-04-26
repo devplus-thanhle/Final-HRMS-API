@@ -16,10 +16,15 @@ app.use(cors());
 
 //Router
 app.use("/api", require("./routers/authRouter"));
+<<<<<<< Updated upstream
 app.get("/get-list", auth.verifyToken, (req, res) => {
   const list = [{ email: "abcsadasd" }, { email: "123e123e2" }];
   res.json(list);
 });
+=======
+app.use("/api", require("./routers/campaignRouter"));
+
+>>>>>>> Stashed changes
 app.all("*", (req, res, next) => {
   next(createError.NotFound("The router can not be found"));
 });
