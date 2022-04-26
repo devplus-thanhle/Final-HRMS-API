@@ -2,6 +2,7 @@ const { campaignValidateCreate } = require("../helpers/validation");
 const createError = require("http-errors");
 const Campaigns = require("../models/campaignModel");
 const cloudinary = require("cloudinary").v2;
+const APIFeatures = require("../helpers/feature");
 
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -45,6 +46,31 @@ const campaignServices = {
       });
 
       return await newCampaign.save();
+    } catch (error) {
+      next(error);
+    }
+  },
+  getAllCampaign: async (req, next) => {
+    try {
+      const features = new APIFeatures(
+        Campaigns.find(),
+        req.query
+      ).paginating();
+
+      const result = await Promise.allSettled([
+        features.query,
+        Campaigns.countDocuments(),
+      ]);
+
+      const campaigns = result[0].status === "fulfilled" ? result[0].value : [];
+      const count = result[1].status === "fulfilled" ? result[1].value : 0;
+
+      if (!campaigns) throw createError.NotFound("Campaign not found");
+
+      return {
+        campaigns,
+        count,
+      };
     } catch (error) {
       next(error);
     }

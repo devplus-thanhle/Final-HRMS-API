@@ -6,6 +6,11 @@ const campaignCtrl = {
     if (!result) return;
     res.status(200).json({ msg: "Create Campaign Success", result });
   },
+  getAllCampaign: async (req, res, next) => {
+    const result = await campaignServices.getAllCampaign(req, next);
+    if (!result) return;
+    res.status(200).json({ msg: "Get All Campaign Success", result });
+  },
 };
 
 module.exports = campaignCtrl;
