@@ -17,6 +17,4 @@ client.on("connected", function (err) {
   console.log("Connected");
 });
 
-client.connect();
-
 module.exports = client;

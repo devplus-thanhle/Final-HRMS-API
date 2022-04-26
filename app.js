@@ -1,30 +1,29 @@
 require("dotenv").config();
-require("./helpers/connectRedis");
+const client = require("./helpers/connectRedis");
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-// const cookieParser = require("cookie-parser");
+const cookieParser = require("cookie-parser");
 const createError = require("http-errors");
 const { errorHandle } = require("./helpers/errorHandle");
 const auth = require("./middlewares/authMiddleware");
+client.set("foo", "LeSyThanh");
+client.get("foo", (err, result) => {
+  if (err) throw createError.BadRequest();
+
+  console.log(result);
+});
 
 const app = express();
 
 app.use(express.json());
 app.use(cors());
-// app.use(cookieParser());
+app.use(cookieParser());
 
 //Router
 app.use("/api", require("./routers/authRouter"));
-<<<<<<< Updated upstream
-app.get("/get-list", auth.verifyToken, (req, res) => {
-  const list = [{ email: "abcsadasd" }, { email: "123e123e2" }];
-  res.json(list);
-});
-=======
 app.use("/api", require("./routers/campaignRouter"));
 
->>>>>>> Stashed changes
 app.all("*", (req, res, next) => {
   next(createError.NotFound("The router can not be found"));
 });
