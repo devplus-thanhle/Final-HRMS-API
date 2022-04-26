@@ -6,7 +6,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const createError = require("http-errors");
 const { errorHandle } = require("./helpers/errorHandle");
-const auth = require("./middlewares/authMiddleware");
+
 client.set("foo", "LeSyThanh");
 client.get("foo", (err, result) => {
   if (err) throw createError.BadRequest();

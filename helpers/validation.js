@@ -1,19 +1,5 @@
 const Joi = require("joi");
 
-const userValidate = (data) => {
-  const userSchema = Joi.object({
-    fullname: Joi.string().required(),
-    email: Joi.string()
-      .pattern(new RegExp("gmail.com"))
-      .email()
-      .lowercase()
-      .required(),
-    password: Joi.string().min(6).max(32).required(),
-  });
-
-  return userSchema.validate(data);
-};
-
 const userValidateLogin = (data) => {
   const userSchema = Joi.object({
     email: Joi.string()
@@ -27,4 +13,39 @@ const userValidateLogin = (data) => {
   return userSchema.validate(data);
 };
 
-module.exports = { userValidate, userValidateLogin };
+const campaignValidateCreate = (data) => {
+  const campaignSchema = Joi.object({
+    title: Joi.string().required(),
+    description: Joi.string().required(),
+    address: Joi.string().required(),
+    startDate: Joi.date().required(),
+    endDate: Joi.date().required(),
+    quantity: Joi.number().required(),
+    position: Joi.string().required(),
+    technology: Joi.array(),
+  });
+
+  return campaignSchema.validate(data);
+};
+
+const profileValidateCreate = (data) => {
+  const profileSchema = Joi.object({
+    fullname: Joi.string().required(),
+    email: Joi.string()
+      .pattern(new RegExp("gmail.com"))
+      .email()
+      .lowercase()
+      .required(),
+    phone: Joi.string().required(),
+    detail: Joi.string(),
+    id: Joi.string().required(),
+  });
+
+  return profileSchema.validate(data);
+};
+
+module.exports = {
+  userValidateLogin,
+  campaignValidateCreate,
+  profileValidateCreate,
+};

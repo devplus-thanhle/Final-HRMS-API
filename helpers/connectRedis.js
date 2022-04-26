@@ -10,11 +10,15 @@ client.ping((err, pong) => {
 });
 
 client.on("error", function (err) {
-  console.log("error", err);
+  console.log(err);
 });
 
-client.on("connected", function (err) {
-  console.log("Connected");
+client.on("connect", function (err) {
+  console.log("Connected to Redis");
+});
+
+client.on("ready", function (err) {
+  console.log("Redis to ready");
 });
 
 module.exports = client;
