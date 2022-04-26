@@ -7,5 +7,6 @@ router.post(
   upload.single("recfile"),
   campaignCtrl.createCampaign
 );
+router.get("/get-all-campaign", campaignCtrl.getAllCampaign);
 
 module.exports = router;
