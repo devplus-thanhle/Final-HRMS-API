@@ -75,6 +75,51 @@ const campaignServices = {
       next(error);
     }
   },
+  updateCampaign: async (req, next) => {
+    try {
+      const {
+        title,
+        description,
+        address,
+        startDate,
+        endDate,
+        quantity,
+        position,
+        technology
+      } = req.body;
+
+      const campaign = await Campaigns.findById(req.params.id);
+      const { image } = campaign;
+      const tmp = req.file;
+      let img;
+
+      if (!tmp) {
+        img = image;
+      } else {
+        img = await cloudinary.uploader.upload(req.file.path);
+      }
+
+      const newCampaign = await Campaigns.findOneAndUpdate(
+        { _id: req.params.id },
+        {
+          title,
+          description,
+          address,
+          startDate,
+          endDate,
+          quantity,
+          position,
+          technology,
+          image: img.secure_url ? img.secure_url : image,
+        },
+        {
+          new: true,
+        }
+      );
+      if (!newCampaign) throw createError.BadRequest("Campaign not found");
+      return newCampaign;
+    } catch (error) {}
+  },
 };
 
 module.exports = campaignServices;
