@@ -16,6 +16,16 @@ const campaignCtrl = {
     if (!result) return;
     res.status(200).json({ msg: "Update Campaign Success", result });
   },
+  disableCampaign: async (req, res, next) => {
+    const result = await campaignServices.disableCampaign(req, next);
+    if (!result) return;
+    res.status(200).json({ msg: "Disable Campaign Success", result });
+  },
+  activeCampaign: async (req, res, next) => {
+    const result = await campaignServices.activeCampaign(req, next);
+    if (!result) return;
+    res.status(200).json({ msg: "Active Campaign Success", result });
+  },
 };
 
 module.exports = campaignCtrl;

@@ -13,4 +13,6 @@ router.patch(
   upload.single("recfile"),
   campaignCtrl.updateCampaign
 );
+router.patch("/disable-campaign/:id", campaignCtrl.disableCampaign);
+router.patch("/active-campaign/:id", campaignCtrl.activeCampaign);
 module.exports = router;

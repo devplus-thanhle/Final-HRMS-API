@@ -85,7 +85,7 @@ const campaignServices = {
         endDate,
         quantity,
         position,
-        technology
+        technology,
       } = req.body;
 
       const campaign = await Campaigns.findById(req.params.id);
@@ -119,6 +119,40 @@ const campaignServices = {
       if (!newCampaign) throw createError.BadRequest("Campaign not found");
       return newCampaign;
     } catch (error) {}
+  },
+  disableCampaign: async (req, next) => {
+    try {
+      const newCampaign = await Campaigns.findOneAndUpdate(
+        { _id: req.params.id },
+        {
+          active: false,
+        },
+        {
+          new: true,
+        }
+      );
+      if (!newCampaign) throw createError.BadRequest("Campaign not found");
+      return newCampaign;
+    } catch (error) {
+      next(error);
+    }
+  },
+  activeCampaign: async (req, next) => {
+    try {
+      const newCampaign = await Campaigns.findOneAndUpdate(
+        { _id: req.params.id },
+        {
+          active: true,
+        },
+        {
+          new: true,
+        }
+      );
+      if (!newCampaign) throw createError.BadRequest("Campaign not found");
+      return newCampaign;
+    } catch (error) {
+      next(error);
+    }
   },
 };
 
