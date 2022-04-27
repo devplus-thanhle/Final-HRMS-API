@@ -8,5 +8,9 @@ router.post(
   campaignCtrl.createCampaign
 );
 router.get("/get-all-campaign", campaignCtrl.getAllCampaign);
-
+router.patch(
+  "/update-campaign/:id",
+  upload.single("recfile"),
+  campaignCtrl.updateCampaign
+);
 module.exports = router;
