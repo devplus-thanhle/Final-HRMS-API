@@ -117,8 +117,28 @@ const profileServices = {
   },
   getAllProfiles: async (req, next) => {
     try {
+      const search = req.query.search;
       const features = new APIFeatures(
-        Profiles.find({}),
+        Profiles.find({
+          $and: [
+            {
+              $or: [
+                { fullname: { $regex: new RegExp(search), $options: "i" } },
+                { email: { $regex: new RegExp(search), $options: "i" } },
+                {
+                  phone: { $regex: new RegExp(search) },
+                },
+                {
+                  step: { $regex: new RegExp(search), $options: "i" },
+                },
+                {
+                  status: { $regex: new RegExp(search), $options: "i" },
+                },
+                { detail: { $regex: new RegExp(search), $options: "i" } },
+              ],
+            },
+          ],
+        }),
         req.query
       ).paginating();
 
