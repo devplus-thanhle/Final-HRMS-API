@@ -16,6 +16,11 @@ const profileCtrl = {
     if (!result) return;
     res.status(200).json({ msg: "Get All Profiles Success", result });
   },
+  changeStepProfile: async (req, res, next) => {
+    const result = await profileServices.changeStepProfile(req, next);
+    if (!result) return;
+    res.status(200).json({ msg: "Chang Step Profile Success", result });
+  },
 };
 
 module.exports = profileCtrl;
