@@ -23,6 +23,7 @@ app.use(cookieParser());
 //Router
 app.use("/api", require("./routers/authRouter"));
 app.use("/api", require("./routers/campaignRouter"));
+app.use("/api", require("./routers/profileRouter"));
 
 app.all("*", (req, res, next) => {
   next(createError.NotFound("The router can not be found"));

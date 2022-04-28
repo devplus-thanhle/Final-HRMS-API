@@ -54,47 +54,17 @@ const campaignServices = {
       const filter = req.query.filter;
       const search = req.query.search;
       const features = new APIFeatures(
-        Campaigns.aggregate([
-          {
-            $match: {
-              $or: [
-                { title: { $regex: new RegExp(search), $options: "i" } },
-                { position: { $regex: new RegExp(search), $options: "i" } },
-                { description: { $regex: new RegExp(search), $options: "i" } },
-                { address: { $regex: new RegExp(search), $options: "i" } },
-                {
-                  technology: { $regex: new RegExp(search), $options: "i" },
-                },
-              ],
+        Campaigns.find({
+          $or: [
+            { title: { $regex: new RegExp(search), $options: "i" } },
+            { position: { $regex: new RegExp(search), $options: "i" } },
+            { description: { $regex: new RegExp(search), $options: "i" } },
+            { address: { $regex: new RegExp(search), $options: "i" } },
+            {
+              technology: { $regex: new RegExp(search), $options: "i" },
             },
-          },
-          {
-            $match: {
-              $and: [
-                {
-                  $or: [
-                    {
-                      technology: { $regex: new RegExp(filter), $options: "i" },
-                    },
-                    { position: { $regex: new RegExp(filter), $options: "i" } },
-                  ],
-                },
-                {
-                  $or: [
-                    { title: { $regex: new RegExp(search), $options: "i" } },
-                    {
-                      description: {
-                        $regex: new RegExp(search),
-                        $options: "i",
-                      },
-                    },
-                    { address: { $regex: new RegExp(search), $options: "i" } },
-                  ],
-                },
-              ],
-            },
-          },
-        ]),
+          ],
+        }),
         req.query
       )
         .paginating()
