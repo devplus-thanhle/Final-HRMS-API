@@ -15,6 +15,16 @@ function APIFeatures(query, queryString) {
     this.query = this.query.sort(sort);
     return this;
   };
+  this.filtering = () => {
+    const queryObj = { ...this.queryString };
+    const excludedFields = ["page", "sort", "limit", "search"];
+    excludedFields.forEach((el) => delete queryObj[el]);
+    const filter = queryObj.filter;
+    const status = filter ? { status: filter } : "" || {};
+
+    this.query = this.query.find(status);
+    return this;
+  };
 }
 
 module.exports = APIFeatures;
