@@ -115,6 +115,26 @@ const profileServices = {
       next(error);
     }
   },
+  getAllProfiles: async (req, next) => {
+    try {
+      const features = new APIFeatures(
+        Profiles.find({}),
+        req.query
+      ).paginating();
+
+      const result = await Promise.allSettled([features.query]);
+      const profiles = result[0].status === "fulfilled" ? result[0].value : [];
+      const count =
+        result[0].status === "fulfilled" ? result[0].value.length : 0;
+
+      if (!profiles) {
+        throw createError.NotFound("Not found");
+      }
+      return { profiles, count };
+    } catch (error) {
+      next(error);
+    }
+  },
 };
 
 module.exports = profileServices;

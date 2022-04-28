@@ -17,5 +17,6 @@ router.post(
   profileCtrl.createProfile
 );
 router.patch("/change-status-profile/:id", profileCtrl.changeStatusProfile);
+router.get("/all-profiles", profileCtrl.getAllProfiles);
 
 module.exports = router;
