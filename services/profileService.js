@@ -118,6 +118,9 @@ const profileServices = {
   getAllProfiles: async (req, next) => {
     try {
       const search = req.query.search;
+      const step = req.query.step;
+      const status = req.query.status;
+
       const features = new APIFeatures(
         Profiles.find({
           $and: [
@@ -137,6 +140,26 @@ const profileServices = {
                 { detail: { $regex: new RegExp(search), $options: "i" } },
               ],
             },
+            {
+              $or: [
+                { step: { $regex: new RegExp(step), $options: "i" } },
+                {
+                  status: { $regex: new RegExp(status), $options: "i" },
+                },
+              ],
+            },
+            {
+              $or: [
+                {
+                  $and: [
+                    { step: { $regex: new RegExp(step), $options: "i" } },
+                    {
+                      status: { $regex: new RegExp(status), $options: "i" },
+                    },
+                  ],
+                },
+              ],
+            },
           ],
         }),
         req.query
@@ -144,15 +167,17 @@ const profileServices = {
         .paginating()
         .sorting();
 
-      const result = await Promise.allSettled([features.query]);
+      const result = await Promise.allSettled([
+        features.query,
+        Profiles.countDocuments(),
+      ]);
       const profiles = result[0].status === "fulfilled" ? result[0].value : [];
-      const count =
-        result[0].status === "fulfilled" ? result[0].value.length : 0;
+      const count = result[1].status === "fulfilled" ? result[1].value : 0;
 
       if (!profiles) {
         throw createError.NotFound("Not found");
       }
-      return { profiles, count };
+      return { profiles, count, page: Number(req.query.page) };
     } catch (error) {
       next(error);
     }
