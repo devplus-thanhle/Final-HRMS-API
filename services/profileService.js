@@ -244,6 +244,17 @@ const profileServices = {
       next(error);
     }
   },
+  getProfileById: async (req, next) => {
+    try {
+      const result = await Profiles.findById(req.params.id).populate(
+        "campaignId"
+      );
+      if (!result) throw createError.NotFound("Profile not found");
+      return result;
+    } catch (error) {
+      next(error);
+    }
+  },
 };
 
 module.exports = profileServices;
