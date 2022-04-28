@@ -252,7 +252,7 @@ const campaignServices = {
           _id: req.params.id,
         }).populate("profiles"),
         req.query
-      );
+      ).paginating();
       const result = await Promise.allSettled([features.query]);
 
       const campaign = result[0].status === "fulfilled" ? result[0].value : [];
