@@ -182,6 +182,68 @@ const profileServices = {
       next(error);
     }
   },
+  changeStepProfile: async (req, next) => {
+    try {
+      const { time, date } = req.body;
+
+      const change = async () => {
+        const result = await Profiles.findByIdAndUpdate(
+          req.params.id,
+          {
+            $set: { step: req.body.step },
+          },
+          { new: true }
+        ).populate("campaignId");
+
+        if (!result) throw createError.NotFound("Profile not found");
+        return result;
+      };
+
+      const res = await Profiles.findById(req.params.id);
+
+      switch (req.body.step) {
+        // case "reject":
+        //   if (res.status === "reject") {
+        //     throw createError.BadRequest("Profile is already reject");
+        //   }
+        //   const rej = await change();
+        //   // await sendEmailReject({ toUser: rej, reason });
+        //   return rej;
+
+        case "cvnew":
+          // if (res.status === "test") {
+          //   throw createError.BadRequest("Profile is already test");
+          // }
+          const cvnew = change();
+          // await sendEmailStatusTest({ toUser: test, time, date });
+          return cvnew;
+        case "phone":
+          // if (res.status === "interview") {
+          //   throw createError.BadRequest("Profile is already interview");
+          // }
+          const phone = await change();
+          // await sendEmailStatusInterview({ toUser: interview, time, date });
+          return phone;
+        case "test":
+          // if (res.status === "confirm") {
+          //   throw createError.BadRequest("Profile is already pass");
+          // }
+          const test = change();
+          // await sendEmailStatusPass({ toUser: res, time, date });
+          return test;
+        case "interview":
+          const interview = change();
+          return interview;
+        case "offer":
+          const offer = change();
+          return offer;
+        default:
+          break;
+      }
+    } catch (error) {
+      next(error);
+    }
+  },
 };
 
 module.exports = profileServices;

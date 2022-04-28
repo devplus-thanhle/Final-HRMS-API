@@ -18,5 +18,6 @@ router.post(
 );
 router.patch("/change-status-profile/:id", profileCtrl.changeStatusProfile);
 router.get("/all-profiles", profileCtrl.getAllProfiles);
+router.patch("/change-step-profile/:id", profileCtrl.changeStepProfile);
 
 module.exports = router;
