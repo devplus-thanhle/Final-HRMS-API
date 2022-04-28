@@ -140,7 +140,9 @@ const profileServices = {
           ],
         }),
         req.query
-      ).paginating();
+      )
+        .paginating()
+        .sorting();
 
       const result = await Promise.allSettled([features.query]);
       const profiles = result[0].status === "fulfilled" ? result[0].value : [];
