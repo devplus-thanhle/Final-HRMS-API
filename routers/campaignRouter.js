@@ -8,6 +8,7 @@ router.post(
   campaignCtrl.createCampaign
 );
 router.get("/get-all-campaign", campaignCtrl.getAllCampaign);
+router.get("/get-all-campaignActive", campaignCtrl.getAllCampaignActive);
 router.get("/get-campaign/:id", campaignCtrl.getCampaignById);
 
 router.patch(

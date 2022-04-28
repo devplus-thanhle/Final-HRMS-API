@@ -118,6 +118,84 @@ const campaignServices = {
       next(error);
     }
   },
+  getAllCampaignActive: async (req, next) => {
+    try {
+      const filter = req.query.filter;
+      const search = req.query.search;
+
+      const features = new APIFeatures(
+        Campaigns.aggregate([
+          {
+            $match: {
+              $or: [
+                { title: { $regex: new RegExp(search), $options: "i" } },
+                { position: { $regex: new RegExp(search), $options: "i" } },
+                {
+                  description: {
+                    $regex: new RegExp(search),
+                    $options: "i",
+                  },
+                },
+                { address: { $regex: new RegExp(search), $options: "i" } },
+                {
+                  technology: { $regex: new RegExp(search), $options: "i" },
+                },
+              ],
+              active: true,
+            },
+          },
+          {
+            $match: {
+              $and: [
+                {
+                  $or: [
+                    {
+                      technology: { $regex: new RegExp(filter), $options: "i" },
+                    },
+                    { position: { $regex: new RegExp(filter), $options: "i" } },
+                  ],
+                  active: true,
+                },
+                {
+                  $or: [
+                    { title: { $regex: new RegExp(search), $options: "i" } },
+                    {
+                      description: {
+                        $regex: new RegExp(search),
+                        $options: "i",
+                      },
+                    },
+                    { address: { $regex: new RegExp(search), $options: "i" } },
+                  ],
+                  active: true,
+                },
+              ],
+            },
+          },
+        ]),
+        req.query
+      )
+        .paginating()
+        .sorting();
+
+      const result = await Promise.allSettled([
+        features.query,
+        Campaigns.countDocuments(),
+      ]);
+
+      const campaigns = result[0].status === "fulfilled" ? result[0].value : [];
+      const count = result[1].status === "fulfilled" ? result[1].value : 0;
+
+      if (!campaigns) throw createError.NotFound("Campaign not found");
+
+      return {
+        campaigns,
+        count,
+      };
+    } catch (error) {
+      next(error);
+    }
+  },
   updateCampaign: async (req, next) => {
     try {
       const {
