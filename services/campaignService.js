@@ -250,11 +250,10 @@ const campaignServices = {
       const features = new APIFeatures(
         Campaigns.find({
           _id: req.params.id,
-        }),
+        }).populate("profiles"),
         req.query
-      ).paginating();
+      );
       const result = await Promise.allSettled([features.query]);
-      console.log(result);
 
       const campaign = result[0].status === "fulfilled" ? result[0].value : [];
       const count =
