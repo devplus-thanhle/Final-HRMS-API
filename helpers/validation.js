@@ -21,8 +21,8 @@ const campaignValidateCreate = (data) => {
     startDate: Joi.date().required(),
     endDate: Joi.date().required(),
     quantity: Joi.number().required(),
-    position: Joi.string().required(),
-    technology: Joi.array(),
+    position: Joi.allow(),
+    technology: Joi.allow(),
   });
 
   return campaignSchema.validate(data);

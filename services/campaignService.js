@@ -32,7 +32,6 @@ const campaignServices = {
       if (!img) {
         throw createError.BadRequest("Upload image failed");
       }
-
       const newCampaign = new Campaigns({
         title,
         description,
@@ -40,13 +39,13 @@ const campaignServices = {
         startDate,
         endDate,
         quantity,
-        position,
-        technology,
+        position: position.split(","),
+        technology: technology.split(","),
         image: img.secure_url,
       });
-
       return await newCampaign.save();
     } catch (error) {
+      console.log(error);
       next(error);
     }
   },
@@ -152,6 +151,31 @@ const campaignServices = {
       return newCampaign;
     } catch (error) {
       next(error);
+    }
+  },
+  getCampaignById: async (req, next) => {
+    try {
+      const features = new APIFeatures(
+        Campaigns.find({
+          _id: req.params.id,
+        }),
+        req.query
+      ).paginating();
+      const result = await Promise.allSettled([features.query]);
+      console.log(result);
+
+      const campaign = result[0].status === "fulfilled" ? result[0].value : [];
+      const count =
+        result[0].status === "fulfilled" ? result[0].value.length : 0;
+
+      if (!campaign) throw createError.NotFound("Profile not found");
+
+      return {
+        campaign,
+        count,
+      };
+    } catch (error) {
+      console.log(error);
     }
   },
 };
