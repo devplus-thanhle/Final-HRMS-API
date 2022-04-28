@@ -51,17 +51,44 @@ const campaignServices = {
   },
   getAllCampaign: async (req, next) => {
     try {
-      const filter = req.query.filter;
+      const position = req.query.position;
+      const technology = req.query.technology;
       const search = req.query.search;
       const features = new APIFeatures(
         Campaigns.find({
-          $or: [
-            { title: { $regex: new RegExp(search), $options: "i" } },
-            { position: { $regex: new RegExp(search), $options: "i" } },
-            { description: { $regex: new RegExp(search), $options: "i" } },
-            { address: { $regex: new RegExp(search), $options: "i" } },
+          $and: [
             {
-              technology: { $regex: new RegExp(search), $options: "i" },
+              $or: [
+                { title: { $regex: new RegExp(search), $options: "i" } },
+                { position: { $regex: new RegExp(search), $options: "i" } },
+                {
+                  description: { $regex: new RegExp(search), $options: "i" },
+                },
+                { address: { $regex: new RegExp(search), $options: "i" } },
+                {
+                  technology: { $regex: new RegExp(search), $options: "i" },
+                },
+              ],
+            },
+            {
+              $or: [
+                {
+                  position: {
+                    $regex: new RegExp([position]),
+                    $options: "i",
+                  },
+                },
+              ],
+            },
+            {
+              $or: [
+                {
+                  technology: {
+                    $regex: new RegExp(technology),
+                    $options: "i",
+                  },
+                },
+              ],
             },
           ],
         }),
