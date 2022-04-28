@@ -11,6 +11,11 @@ const profileCtrl = {
     if (!result) return;
     res.status(200).json({ msg: "Change Status Profile Success", result });
   },
+  getAllProfiles: async (req, res, next) => {
+    const result = await profileServices.getAllProfiles(req, next);
+    if (!result) return;
+    res.status(200).json({ msg: "Get All Profiles Success", result });
+  },
 };
 
 module.exports = profileCtrl;
