@@ -51,8 +51,23 @@ const campaignServices = {
   },
   getAllCampaign: async (req, next) => {
     try {
+      const search = req.query.search;
       const features = new APIFeatures(
-        Campaigns.find(),
+        Campaigns.aggregate([
+          {
+            $match: {
+              $or: [
+                { title: { $regex: new RegExp(search), $options: "i" } },
+                { position: { $regex: new RegExp(search), $options: "i" } },
+                { description: { $regex: new RegExp(search), $options: "i" } },
+                { address: { $regex: new RegExp(search), $options: "i" } },
+                {
+                  technology: { $regex: new RegExp(search), $options: "i" },
+                },
+              ],
+            },
+          },
+        ]),
         req.query
       ).paginating();
 
