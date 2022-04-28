@@ -69,7 +69,9 @@ const campaignServices = {
           },
         ]),
         req.query
-      ).paginating();
+      )
+        .paginating()
+        .sorting();
 
       const result = await Promise.allSettled([
         features.query,

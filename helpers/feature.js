@@ -10,6 +10,11 @@ function APIFeatures(query, queryString) {
 
     return this;
   };
+  this.sorting = () => {
+    const sort = this.queryString.sort || "-createdAt";
+    this.query = this.query.sort(sort);
+    return this;
+  };
 }
 
 module.exports = APIFeatures;
