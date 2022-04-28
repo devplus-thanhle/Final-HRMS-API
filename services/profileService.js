@@ -63,6 +63,58 @@ const profileServices = {
       next(error);
     }
   },
+  changeStatusProfile: async (req, next) => {
+    try {
+      const { reason } = req.body;
+
+      console.log(reason);
+
+      const change = async () => {
+        const result = await Profiles.findByIdAndUpdate(
+          req.params.id,
+          {
+            $set: { status: req.body.status },
+          },
+          { new: true }
+        ).populate("campaignId");
+
+        if (!result) throw createError.NotFound("Profile not found");
+        return result;
+      };
+
+      const res = await Profiles.findById(req.params.id);
+
+      switch (req.body.status) {
+        case "reject":
+          if (res.status === "reject") {
+            throw createError.BadRequest("Profile is already reject");
+          }
+          const rej = await change();
+          // await sendEmailReject({ toUser: rej, reason });
+          return rej;
+
+        case "pending":
+          // if (res.status === "test") {
+          //   throw createError.BadRequest("Profile is already test");
+          // }
+          const pending = change();
+          // await sendEmailStatusTest({ toUser: test, time, date });
+          return pending;
+        case "passed":
+          // if (res.status === "interview") {
+          //   throw createError.BadRequest("Profile is already interview");
+          // }
+          const passed = await change();
+          // await sendEmailStatusInterview({ toUser: interview, time, date });
+          return passed;
+
+        default:
+          break;
+      }
+    } catch (error) {
+      next(error);
+    }
+  },
 };
 
 module.exports = profileServices;
