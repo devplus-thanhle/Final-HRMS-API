@@ -117,21 +117,19 @@ const campaignServices = {
   },
   getAllCampaignActive: async (req, next) => {
     try {
-      const filter = req.query.filter;
+      const position = req.query.position;
+      const technology = req.query.technology;
       const search = req.query.search;
 
       const features = new APIFeatures(
-        Campaigns.aggregate([
-          {
-            $match: {
+        Campaigns.find({
+          $and: [
+            {
               $or: [
                 { title: { $regex: new RegExp(search), $options: "i" } },
                 { position: { $regex: new RegExp(search), $options: "i" } },
                 {
-                  description: {
-                    $regex: new RegExp(search),
-                    $options: "i",
-                  },
+                  description: { $regex: new RegExp(search), $options: "i" },
                 },
                 { address: { $regex: new RegExp(search), $options: "i" } },
                 {
@@ -140,36 +138,30 @@ const campaignServices = {
               ],
               active: true,
             },
-          },
-          {
-            $match: {
-              $and: [
+            {
+              $or: [
                 {
-                  $or: [
-                    {
-                      technology: { $regex: new RegExp(filter), $options: "i" },
-                    },
-                    { position: { $regex: new RegExp(filter), $options: "i" } },
-                  ],
-                  active: true,
-                },
-                {
-                  $or: [
-                    { title: { $regex: new RegExp(search), $options: "i" } },
-                    {
-                      description: {
-                        $regex: new RegExp(search),
-                        $options: "i",
-                      },
-                    },
-                    { address: { $regex: new RegExp(search), $options: "i" } },
-                  ],
-                  active: true,
+                  position: {
+                    $regex: new RegExp([position]),
+                    $options: "i",
+                  },
                 },
               ],
+              active: true,
             },
-          },
-        ]),
+            {
+              $or: [
+                {
+                  technology: {
+                    $regex: new RegExp(technology),
+                    $options: "i",
+                  },
+                },
+              ],
+              active: true,
+            },
+          ],
+        }),
         req.query
       )
         .paginating()
