@@ -8,6 +8,8 @@ router.post(
   campaignCtrl.createCampaign
 );
 router.get("/get-all-campaign", campaignCtrl.getAllCampaign);
+router.get("/get-campaign/:id", campaignCtrl.getCampaignById);
+
 router.patch(
   "/update-campaign/:id",
   upload.single("recfile"),
