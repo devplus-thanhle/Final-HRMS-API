@@ -161,7 +161,7 @@ const profileServices = {
               ],
             },
           ],
-        }),
+        }).populate("campaignId", "title"),
         req.query
       )
         .paginating()
