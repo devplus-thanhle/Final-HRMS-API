@@ -172,12 +172,18 @@ const profileServices = {
         Profiles.countDocuments(),
       ]);
       const profiles = result[0].status === "fulfilled" ? result[0].value : [];
-      const count = result[1].status === "fulfilled" ? result[1].value : 0;
+      const count =
+        result[0].status === "fulfilled" ? result[0].value.length : 0;
+      const total = result[1].status === "fulfilled" ? result[1].value : 0;
 
       if (!profiles) {
         throw createError.NotFound("Not found");
       }
-      return { profiles, count, page: Number(req.query.page) };
+      return {
+        profiles,
+        total: search || step || status ? count : total,
+        page: Number(req.query.page) || 1,
+      };
     } catch (error) {
       next(error);
     }
