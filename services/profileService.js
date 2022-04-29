@@ -89,23 +89,24 @@ const profileServices = {
           if (res.status === "reject") {
             throw createError.BadRequest("Profile is already reject");
           }
-          const rej = await change();
-          // await sendEmailReject({ toUser: rej, reason });
+          const rej = await await change();
+          await sendEmailReject({ toUser: rej, reason });
           return rej;
 
         case "pending":
           // if (res.status === "test") {
           //   throw createError.BadRequest("Profile is already test");
           // }
-          const pending = change();
+          const pending = await change();
           // await sendEmailStatusTest({ toUser: test, time, date });
           return pending;
         case "passed":
           // if (res.status === "interview") {
           //   throw createError.BadRequest("Profile is already interview");
           // }
-          const passed = await change();
+          const passed = await await change();
           // await sendEmailStatusInterview({ toUser: interview, time, date });
+          await sendEmailStatusPass({ toUser: passed });
           return passed;
 
         default:
@@ -208,19 +209,11 @@ const profileServices = {
       const res = await Profiles.findById(req.params.id);
 
       switch (req.body.step) {
-        // case "reject":
-        //   if (res.status === "reject") {
-        //     throw createError.BadRequest("Profile is already reject");
-        //   }
-        //   const rej = await change();
-        //   // await sendEmailReject({ toUser: rej, reason });
-        //   return rej;
-
         case "cvnew":
           // if (res.status === "test") {
           //   throw createError.BadRequest("Profile is already test");
           // }
-          const cvnew = change();
+          const cvnew = await change();
           // await sendEmailStatusTest({ toUser: test, time, date });
           return cvnew;
         case "phone":
@@ -234,14 +227,15 @@ const profileServices = {
           // if (res.status === "confirm") {
           //   throw createError.BadRequest("Profile is already pass");
           // }
-          const test = change();
-          // await sendEmailStatusPass({ toUser: res, time, date });
+          const test = await change();
+          await sendEmailStatusTest({ toUser: test, time, date });
           return test;
         case "interview":
-          const interview = change();
+          const interview = await change();
+          await sendEmailStatusInterview({ toUser: interview, time, date });
           return interview;
         case "offer":
-          const offer = change();
+          const offer = await change();
           return offer;
         default:
           break;
