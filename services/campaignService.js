@@ -90,6 +90,23 @@ const campaignServices = {
                 },
               ],
             },
+            {
+              $or: [
+                {
+                  $and: [
+                    {
+                      position: { $regex: new RegExp(position), $options: "i" },
+                    },
+                    {
+                      technology: {
+                        $regex: new RegExp(technology),
+                        $options: "i",
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
           ],
         }),
         req.query
