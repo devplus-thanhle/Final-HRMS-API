@@ -118,15 +118,16 @@ const campaignServices = {
         features.query,
         Campaigns.countDocuments(),
       ]);
-
       const campaigns = result[0].status === "fulfilled" ? result[0].value : [];
-      const count = result[1].status === "fulfilled" ? result[1].value : 0;
-
+      const count =
+        result[0].status === "fulfilled" ? result[0].value.length : 0;
+      const total = result[1].status === "fulfilled" ? result[1].value : 0;
       if (!campaigns) throw createError.NotFound("Campaign not found");
 
       return {
         campaigns,
-        count,
+        total: search || technology || position ? count : total,
+        page: Number(req.query.page) || 1,
       };
     } catch (error) {
       next(error);
