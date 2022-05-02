@@ -1,4 +1,11 @@
 GET http://localhost:5000
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjY3OWJlNTRlYmJhMjlmMjlkZjJhNzUiLCJpYXQiOjE2NTE0ODE5NTcsImV4cCI6MTY1MTQ4MTk4N30.ENdmPa-gSlu8RmLSTyZQWUwO6I3xPFFq2s7JPLLlUzc
+
+###
+
+POST http://localhost:5000/api/refresh-token
+Content-Type: application/json
 
 ###
 
@@ -16,7 +23,7 @@ POST http://localhost:5000/api/login
 Content-Type: application/json
 
 {
-    "email": "cuongle.devplus@gmail.com",
+    "email": "Hr.devplus@gmail.com",
     "password": "123123"
 }
 
