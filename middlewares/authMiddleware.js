@@ -29,15 +29,7 @@ const auth = {
         if (err) {
           return reject(err);
         }
-        client.get(decoded._id, (err, reply) => {
-          if (err) {
-            return reject(createError.InternalServerError());
-          }
-          if (rf_token === reply) {
-            return resolve(decoded);
-          }
-          return reject(createError.Unauthorized("Please Login"));
-        });
+        resolve(decoded);
       });
     });
   },

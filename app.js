@@ -1,18 +1,11 @@
 require("dotenv").config();
-const client = require("./helpers/connectRedis");
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const createError = require("http-errors");
 const { errorHandle } = require("./helpers/errorHandle");
-
-client.set("foo", "LeSyThanh");
-client.get("foo", (err, result) => {
-  if (err) throw createError.BadRequest();
-
-  console.log(result);
-});
+const auth = require("./middlewares/authMiddleware");
 
 const app = express();
 
@@ -24,6 +17,17 @@ app.use(cookieParser());
 app.use("/api", require("./routers/authRouter"));
 app.use("/api", require("./routers/campaignRouter"));
 app.use("/api", require("./routers/profileRouter"));
+app.get("/", auth.verifyToken, (req, res) => {
+  const data = [
+    {
+      name: "abc",
+    },
+    {
+      name: "abcda",
+    },
+  ];
+  res.json(data);
+});
 
 app.all("*", (req, res, next) => {
   next(createError.NotFound("The router can not be found"));
