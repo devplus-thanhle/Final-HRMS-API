@@ -28,7 +28,7 @@ const campaignServices = {
         position,
         technology,
       } = req.body;
-      const img = await cloudinary.uploader.upload(req.file.path);
+      const img = await cloudinary.uploader.upload(req.body.recfile);
       if (!img) {
         throw createError.BadRequest("Upload image failed");
       }
@@ -39,7 +39,7 @@ const campaignServices = {
         startDate,
         endDate,
         quantity,
-        position: position.split(","),
+        position,
         technology: technology.split(","),
         image: img.secure_url,
       });

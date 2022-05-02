@@ -23,6 +23,7 @@ const campaignValidateCreate = (data) => {
     quantity: Joi.number().required(),
     position: Joi.allow(),
     technology: Joi.allow(),
+    recfile: Joi.allow(),
   });
 
   return campaignSchema.validate(data);
