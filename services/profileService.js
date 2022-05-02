@@ -5,7 +5,8 @@ const createError = require("http-errors");
 const APIFeatures = require("../helpers/feature");
 const {
   sendEmailApplySuccess,
-  sendEmailReject,
+  sendEmailRejectCV,
+  sendEmailRejectPhase,
   sendEmailStatusTest,
   sendEmailStatusInterview,
   sendEmailStatusPass,
@@ -65,9 +66,7 @@ const profileServices = {
   },
   changeStatusProfile: async (req, next) => {
     try {
-      const { reason } = req.body;
-
-      console.log(reason);
+      const { position } = req.body;
 
       const change = async () => {
         const result = await Profiles.findByIdAndUpdate(
@@ -85,29 +84,17 @@ const profileServices = {
       const res = await Profiles.findById(req.params.id);
 
       switch (req.body.status) {
-        case "reject":
-          if (res.status === "reject") {
-            throw createError.BadRequest("Profile is already reject");
-          }
-          const rej = await await change();
-          await sendEmailReject({ toUser: rej, reason });
-          return rej;
-
-        case "pending":
-          // if (res.status === "test") {
-          //   throw createError.BadRequest("Profile is already test");
-          // }
-          const pending = await change();
-          // await sendEmailStatusTest({ toUser: test, time, date });
-          return pending;
+        case "processing":
+          const processing = await change();
+          return processing;
         case "passed":
-          // if (res.status === "interview") {
-          //   throw createError.BadRequest("Profile is already interview");
-          // }
           const passed = await await change();
-          // await sendEmailStatusInterview({ toUser: interview, time, date });
-          await sendEmailStatusPass({ toUser: passed });
+          const a = await sendEmailStatusPass({ toUser: passed, position });
+          console.log(a);
           return passed;
+        case "failed":
+          const failed = await await change();
+          return failed;
 
         default:
           break;
@@ -162,7 +149,7 @@ const profileServices = {
               ],
             },
           ],
-        }).populate("campaignId", "title"),
+        }).populate("campaignId", "title position"),
         req.query
       )
         .paginating()
@@ -191,7 +178,7 @@ const profileServices = {
   },
   changeStepProfile: async (req, next) => {
     try {
-      const { time, date } = req.body;
+      const { linkDateTime, valueReject } = req.body;
 
       const change = async () => {
         const result = await Profiles.findByIdAndUpdate(
@@ -209,34 +196,39 @@ const profileServices = {
       const res = await Profiles.findById(req.params.id);
 
       switch (req.body.step) {
-        case "cvnew":
+        case "new":
           // if (res.status === "test") {
           //   throw createError.BadRequest("Profile is already test");
           // }
           const cvnew = await change();
-          // await sendEmailStatusTest({ toUser: test, time, date });
           return cvnew;
-        case "phone":
-          // if (res.status === "interview") {
-          //   throw createError.BadRequest("Profile is already interview");
-          // }
-          const phone = await change();
-          // await sendEmailStatusInterview({ toUser: interview, time, date });
-          return phone;
         case "test":
-          // if (res.status === "confirm") {
-          //   throw createError.BadRequest("Profile is already pass");
-          // }
           const test = await change();
-          await sendEmailStatusTest({ toUser: test, time, date });
+          await sendEmailStatusTest({ toUser: test, linkDateTime });
           return test;
         case "interview":
           const interview = await change();
-          await sendEmailStatusInterview({ toUser: interview, time, date });
+          await sendEmailStatusInterview({ toUser: interview, linkDateTime });
           return interview;
-        case "offer":
-          const offer = await change();
-          return offer;
+        case "confirm":
+          const confirm = await change();
+          return confirm;
+        case "consider":
+          const consider = await change();
+          return consider;
+        case "employee":
+          const employee = await change();
+          return employee;
+        case "reject":
+          if (valueReject === 1) {
+            const reject = await change();
+            await sendEmailRejectCV({ toUser: reject });
+            return reject;
+          } else {
+            const rejectPhase = await change();
+            await sendEmailRejectPhase({ toUser: rejectPhase });
+            return rejectPhase;
+          }
         default:
           break;
       }

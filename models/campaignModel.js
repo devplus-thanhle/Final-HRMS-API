@@ -34,7 +34,7 @@ const campaignSchema = new mongoose.Schema(
       type: String,
     },
     position: {
-      type: Array,
+      type: String,
     },
     technology: {
       type: Array,
