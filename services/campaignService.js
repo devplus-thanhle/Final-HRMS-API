@@ -3,6 +3,7 @@ const createError = require("http-errors");
 const Campaigns = require("../models/campaignModel");
 const cloudinary = require("cloudinary").v2;
 const APIFeatures = require("../helpers/feature");
+const moment = require("moment");
 
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -237,15 +238,17 @@ const campaignServices = {
         technology,
       } = req.body;
 
+      console.log(startDate, endDate);
+
       const campaign = await Campaigns.findById(req.params.id);
       const { image } = campaign;
-      const tmp = req.file;
+      const tmp = req.body.recfile;
       let img;
 
       if (!tmp) {
         img = image;
       } else {
-        img = await cloudinary.uploader.upload(req.file.path);
+        img = await cloudinary.uploader.upload(req.body.recfile);
       }
 
       const newCampaign = await Campaigns.findOneAndUpdate(
@@ -258,7 +261,7 @@ const campaignServices = {
           endDate,
           quantity,
           position,
-          technology,
+          technology: technology.split(","),
           image: img.secure_url ? img.secure_url : image,
         },
         {
@@ -267,7 +270,10 @@ const campaignServices = {
       );
       if (!newCampaign) throw createError.BadRequest("Campaign not found");
       return newCampaign;
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
   },
   disableCampaign: async (req, next) => {
     try {
@@ -305,24 +311,11 @@ const campaignServices = {
   },
   getCampaignById: async (req, next) => {
     try {
-      const features = new APIFeatures(
-        Campaigns.find({
-          _id: req.params.id,
-        }).populate("profiles"),
-        req.query
-      ).paginating();
-      const result = await Promise.allSettled([features.query]);
-
-      const campaign = result[0].status === "fulfilled" ? result[0].value : [];
-      const count =
-        result[0].status === "fulfilled" ? result[0].value.length : 0;
-
-      if (!campaign) throw createError.NotFound("Profile not found");
-
-      return {
-        campaign,
-        count,
-      };
+      const campaign = await Campaigns.findById(req.params.id).populate(
+        "profiles"
+      );
+      if (!campaign) throw createError.BadRequest("Campaign not found");
+      return campaign;
     } catch (error) {
       console.log(error);
     }
