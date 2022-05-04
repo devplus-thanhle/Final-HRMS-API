@@ -340,6 +340,25 @@ const campaignServices = {
       next(error);
     }
   },
+  countCampaignOfMonth: async (req, next) => {
+    try {
+      const campaigns = await Campaigns.find({});
+      const count = campaigns.filter((campaign) => {
+        const date = new Date(campaign.startDate);
+        const month = date.getMonth();
+        const year = date.getFullYear();
+        const currentDate = new Date();
+        const currentMonth = currentDate.getMonth();
+        const currentYear = currentDate.getFullYear();
+        if (month === currentMonth && year === currentYear) {
+          return campaign;
+        }
+      });
+      return count.length;
+    } catch (error) {
+      next(error);
+    }
+  },
 };
 
 module.exports = campaignServices;

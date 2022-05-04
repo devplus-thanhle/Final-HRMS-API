@@ -39,3 +39,12 @@ Content-Type: application/json
 ### 
 PATCH http://localhost:5000/api/update-campaign-disable
 Content-Type: application/json
+
+### 
+GET http://localhost:5000/api/count-campaign-of-month
+Content-Type: application/json
+
+###
+GET http://localhost:5000/api/count-profiles-of-month
+Content-Type: application/json
+

@@ -20,4 +20,5 @@ router.patch("/change-status-profile/:id", profileCtrl.changeStatusProfile);
 router.get("/all-profiles", profileCtrl.getAllProfiles);
 router.patch("/change-step-profile/:id", profileCtrl.changeStepProfile);
 router.get("/get-profile/:id", profileCtrl.getProfileById);
+router.get("/count-profiles-of-month", profileCtrl.countProfiles);
 module.exports = router;

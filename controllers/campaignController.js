@@ -41,6 +41,11 @@ const campaignCtrl = {
     if (!result) return;
     res.status(200).json({ msg: "Update Campaign Disable Success" });
   },
+  countCampaignOfMonth: async (req, res, next) => {
+    const result = await campaignServices.countCampaignOfMonth(req, next);
+    if (!result) return;
+    res.status(200).json({ msg: "Count Campaign Of Month Success", result });
+  },
 };
 
 module.exports = campaignCtrl;
