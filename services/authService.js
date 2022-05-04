@@ -3,7 +3,9 @@ const createError = require("http-errors");
 const { userValidateLogin } = require("../helpers/validation");
 const { signAccessToken, signRefreshToken } = require("../helpers/jwtService");
 const auth = require("../middlewares/authMiddleware");
-const client = require("../helpers/connectRedis");
+const bcrypt = require("bcrypt");
+const ResetPw = require("../models/resetPasswordModel");
+const { sendResetPassword } = require("../services/mailService");
 
 const authServices = {
   login: async (req, res, next) => {
@@ -82,6 +84,55 @@ const authServices = {
       return { msg: "Logout success" };
     } catch (error) {
       next(error);
+    }
+  },
+
+  emailResetPassword: async (req, next) => {
+    const { email } = req.body;
+
+    try {
+      const user = await Users.findOne({ email });
+      if (!user) throw createError.NotFound("Profile not found");
+
+      const hasHash = await ResetPw.findOne({ profileId: user._id });
+
+      if (hasHash) {
+        throw createError.NotFound("The email has been sent");
+      }
+
+      const hash = new ResetPw({ profileId: user._id });
+
+      await hash.save();
+
+      await sendResetPassword({ toUser: user, hash: hash._id });
+
+      return "The email has been sent";
+    } catch (err) {
+      next(err);
+    }
+  },
+  resetPassword: async (req, next) => {
+    const { password, id } = req.body;
+
+    try {
+      const aHash = await ResetPw.findOne({ _id: id });
+      console.log(aHash);
+      if (!aHash || !aHash.profileId) {
+        throw createError.NotFound("Can not change password");
+      }
+      const salt = await bcrypt.genSalt(10);
+      const passwordHash = await bcrypt.hash(password, salt);
+
+      await Users.findOneAndUpdate(
+        { _id: aHash.profileId },
+        {
+          password: passwordHash,
+        }
+      );
+      await aHash.remove();
+      return "Password changed";
+    } catch (err) {
+      next(err);
     }
   },
 };

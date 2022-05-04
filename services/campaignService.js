@@ -4,6 +4,7 @@ const Campaigns = require("../models/campaignModel");
 const cloudinary = require("cloudinary").v2;
 const APIFeatures = require("../helpers/feature");
 const moment = require("moment");
+const res = require("express/lib/response");
 
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -321,6 +322,21 @@ const campaignServices = {
       return campaign;
     } catch (error) {
       console.log(error);
+    }
+  },
+  updateCampaignDisable: async (req, next) => {
+    try {
+      const campaigns = await Campaigns.find({});
+      campaigns.forEach(async (campaign) => {
+        if (campaign.endDate < new Date()) {
+          const res = await Campaigns.findByIdAndUpdate(campaign._id, {
+            active: false,
+          });
+        }
+      });
+      return "Success";
+    } catch (error) {
+      next(error);
     }
   },
 };

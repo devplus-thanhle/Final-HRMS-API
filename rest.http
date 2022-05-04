@@ -35,3 +35,7 @@ Authorization:  123hbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjU4ZmFhMDQ4YmM
 ###
 DELETE  http://localhost:5000/api/logout
 Content-Type: application/json
+
+### 
+PATCH http://localhost:5000/api/update-campaign-disable
+Content-Type: application/json
