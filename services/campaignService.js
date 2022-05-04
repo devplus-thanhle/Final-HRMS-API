@@ -109,7 +109,7 @@ const campaignServices = {
               ],
             },
           ],
-        }),
+        }).sort({ active: -1 }),
         req.query
       )
         .paginating()
