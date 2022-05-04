@@ -78,20 +78,7 @@ const authServices = {
   },
   logout: async (req, res, next) => {
     try {
-      const { refreshToken } = req.body;
-      if (!refreshToken) {
-        throw createError.BadRequest();
-      }
-
-      const { _id } = await auth.verifyRefreshToken(refreshToken);
-      client.del(_id.toString(), (err, reply) => {
-        if (err) {
-          throw createError.InternalServerError();
-        }
-      });
-
       res.clearCookie("refreshToken", { path: "/api/refresh-token" });
-
       return { msg: "Logout success" };
     } catch (error) {
       next(error);

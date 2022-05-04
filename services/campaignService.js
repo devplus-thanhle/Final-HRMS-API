@@ -216,6 +216,7 @@ const campaignServices = {
       if (!campaigns) {
         throw createError.NotFound("Not found");
       }
+
       return {
         campaigns,
         total: search || position || technology ? count : total,
@@ -236,9 +237,10 @@ const campaignServices = {
         quantity,
         position,
         technology,
+        status,
       } = req.body;
 
-      console.log(startDate, endDate);
+      console.log(status);
 
       const campaign = await Campaigns.findById(req.params.id);
       const { image } = campaign;
@@ -261,6 +263,7 @@ const campaignServices = {
           endDate,
           quantity,
           position,
+          active: status,
           technology: technology.split(","),
           image: img.secure_url ? img.secure_url : image,
         },
