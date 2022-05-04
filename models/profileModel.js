@@ -26,11 +26,11 @@ const profileSchema = new mongoose.Schema(
     },
     step: {
       type: String,
-      default: "cvnew",
+      default: "new",
     },
     status: {
       type: String,
-      default: "pending",
+      default: "processing",
     },
     avatar: {
       type: String,
