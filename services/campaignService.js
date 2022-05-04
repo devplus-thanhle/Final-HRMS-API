@@ -212,11 +212,12 @@ const campaignServices = {
       const campaigns = result[0].status === "fulfilled" ? result[0].value : [];
       const count =
         result[0].status === "fulfilled" ? result[0].value.length : 0;
-      const total = result[1].status === "fulfilled" ? result[1].value : 0;
+      const total = (await Campaigns.find({ active: true })).length;
 
       if (!campaigns) {
         throw createError.NotFound("Not found");
       }
+      console.log(count);
 
       return {
         campaigns,
