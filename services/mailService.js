@@ -186,3 +186,19 @@ exports.sendEmailStatusPass = function ({ toUser, position }) {
 
   return sendEmail(message);
 };
+
+exports.sendResetPassword = function ({ toUser, hash }) {
+  const message = {
+    from: process.env.GOOGLE_USER,
+    to: toUser.email,
+    subject: "[ST United] Reset Password",
+    html: `
+      Dear ${toUser.fullname},<br><br>
+      <p>To change password, please click on this link: <a target="_" href="${process.env.DOMAIN}/reset-password/${hash}">Change password here!</a></p>
+      <p>Cheers,</p>
+      <p>ST United</p>    
+    `,
+  };
+
+  return sendEmail(message);
+};

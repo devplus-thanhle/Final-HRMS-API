@@ -36,6 +36,11 @@ const campaignCtrl = {
     if (!result) return;
     res.status(200).json({ msg: "Get Campaign By Id Success", result });
   },
+  updateCampaignDisable: async (req, res, next) => {
+    const result = await campaignServices.updateCampaignDisable(req, next);
+    if (!result) return;
+    res.status(200).json({ msg: "Update Campaign Disable Success" });
+  },
 };
 
 module.exports = campaignCtrl;
