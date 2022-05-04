@@ -26,6 +26,11 @@ const profileCtrl = {
     if (!result) return;
     res.status(200).json({ msg: "Get Profile Success", result });
   },
+  countProfiles: async (req, res, next) => {
+    const result = await profileServices.countProfiles(req, next);
+    if (!result) return;
+    res.status(200).json({ msg: "Count Profiles Of Month Success", result });
+  },
 };
 
 module.exports = profileCtrl;

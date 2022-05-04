@@ -247,6 +247,52 @@ const profileServices = {
       next(error);
     }
   },
+  countProfiles: async (req, next) => {
+    try {
+      const profiles = await Profiles.find({});
+      const count = profiles.filter((profile) => {
+        const date = new Date(profile.createdAt);
+        const month = date.getMonth();
+        const year = date.getFullYear();
+        const currentDate = new Date();
+        const currentMonth = currentDate.getMonth();
+        const currentYear = currentDate.getFullYear();
+        if (month === currentMonth && year === currentYear) {
+          return profile;
+        }
+      });
+
+      //countAccept
+      const countAccept = profiles.filter((profile) => {
+        if (profile.status === "passed") {
+          return profile;
+        }
+      });
+      //countProcessing
+      const countProcessing = profiles.filter((profile) => {
+        if (profile.status === "processing") {
+          return profile;
+        }
+      });
+
+      //countReject
+      const countReject = profiles.filter((profile) => {
+        if (profile.status === "failed") {
+          return profile;
+        }
+      });
+
+      return {
+        allprofile: profiles.length,
+        profileOfMonth: count.length,
+        profileAccept: countAccept.length,
+        profileProcessing: countProcessing.length,
+        profileReject: countReject.length,
+      };
+    } catch (error) {
+      next(error);
+    }
+  },
 };
 
 module.exports = profileServices;

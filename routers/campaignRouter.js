@@ -19,5 +19,6 @@ router.patch(
 router.patch("/disable-campaign/:id", campaignCtrl.disableCampaign);
 router.patch("/active-campaign/:id", campaignCtrl.activeCampaign);
 router.patch("/update-campaign-disable", campaignCtrl.updateCampaignDisable);
+router.get("/count-campaign-of-month", campaignCtrl.countCampaignOfMonth);
 
 module.exports = router;
